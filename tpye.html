@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonkeyType Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">monkeytype</div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label>time</label>
+            <button class="btn time-btn" data-time="15">15</button>
+            <button class="btn time-btn active" data-time="30">30</button>
+            <button class="btn time-btn" data-time="60">60</button>
+            <button class="btn time-btn" data-time="120">120</button>
+        </div>
+        <div class="control-group">
+            <label>words</label>
+            <button class="btn word-btn" data-words="10">10</button>
+            <button class="btn word-btn" data-words="25">25</button>
+            <button class="btn word-btn" data-words="50">50</button>
+            <button class="btn word-btn" data-words="100">100</button>
+        </div>
+    </div>
+
+    <div class="typing-area">
+        <div class="text-display" id="textDisplay">
+            <div class="timer" id="timer">30</div>
+            <div id="wordsContainer"></div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="typingInput" placeholder="Start typing..." autocomplete="off" spellcheck="false">
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value" id="wpm">0</div>
+            <div class="stat-label">wpm</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="accuracy">100</div>
+            <div class="stat-label">acc</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="raw">0</div>
+            <div class="stat-label">raw</div>
+        </div>
+    </div>
+
+    <div class="results" id="results">
+        <h2>Test Complete!</h2>
+        <div class="result-stats">
+            <div class="stat">
+                <div class="stat-value" id="finalWpm">0</div>
+                <div class="stat-label">wpm</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="finalAccuracy">100</div>
+                <div class="stat-label">accuracy</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="finalRaw">0</div>
+                <div class="stat-label">raw wpm</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="finalTime">30</div>
+                <div class="stat-label">time</div>
+            </div>
+        </div>
+        <button class="restart-btn" onclick="restartTest()">Try Again</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
