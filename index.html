@@ -1,81 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Type Master</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TypeMaster</title>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Export helpers (tiny, CDN) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">TypeMaster</div>
+  <!-- Particles -->
+  <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
+
+  <!-- Dim overlay over background image -->
+  <div class="background-overlay"></div>
+
+  <div class="main-container">
+    <header class="header">
+      <div class="logo">TypeMaster</div>
+      <div class="user-area">
+        <button id="openAuth" class="btn ghost">Login / Signup</button>
+        <div id="userInfo" class="user-info hidden">
+          <span id="userName">Guest</span>
+          <button id="logoutBtn" class="btn ghost small">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="control-group">
+        <label>Time</label>
+        <div>
+          <button class="btn time-btn" data-time="15">15</button>
+          <button class="btn time-btn active" data-time="30">30</button>
+          <button class="btn time-btn" data-time="60">60</button>
+          <button class="btn time-btn" data-time="120">120</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Words</label>
+        <div>
+          <button class="btn word-btn" data-words="10">10</button>
+          <button class="btn word-btn" data-words="25">25</button>
+          <button class="btn word-btn" data-words="50">50</button>
+          <button class="btn word-btn" data-words="100">100</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Actions</label>
+        <div>
+          <button id="startBtn" class="btn primary">Start</button>
+          <button id="restartBtn" class="btn">Restart</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="typing-area card">
+      <div class="topbar">
+        <div class="progress-wrap">
+          <div id="progressBar" class="progress"></div>
+        </div>
+        <div class="timer" id="timer">30</div>
+      </div>
+
+      <div class="text-display" id="textDisplay">
+        <div id="wordsContainer"></div>
+      </div>
+
+      <div class="input-area">
+        <input type="text" id="typingInput" placeholder="Start typing…" autocomplete="off" spellcheck="false">
+      </div>
     </div>
 
-    <div class="controls">
-        <div class="control-group">
-            <label>time</label>
-            <button class="btn time-btn" data-time="15">15</button>
-            <button class="btn time-btn active" data-time="30">30</button>
-            <button class="btn time-btn" data-time="60">60</button>
-            <button class="btn time-btn" data-time="120">120</button>
-        </div>
-        <div class="control-group">
-            <label>words</label>
-            <button class="btn word-btn" data-words="10">10</button>
-            <button class="btn word-btn" data-words="25">25</button>
-            <button class="btn word-btn" data-words="50">50</button>
-            <button class="btn word-btn" data-words="100">100</button>
-        </div>
-    </div>
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-value" id="wpm">0</div>
+        <div class="stat-label">WPM</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="accuracy">100</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="raw">0</div>
+        <div class="stat-label">Raw</div>
+      </div>
+    </section>
 
-    <div class="typing-area">
-        <div class="text-display" id="textDisplay">
-            <div class="timer" id="timer">30</div>
-            <div id="wordsContainer"></div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="typingInput" placeholder="Start typing..." autocomplete="off" spellcheck="false">
-        </div>
-    </div>
+    <section class="history card">
+      <div class="history-header">
+        <h3>Your Recent Results</h3>
+        <button id="clearHistory" class="btn ghost small">Clear</button>
+      </div>
+      <div id="historyList" class="history-list empty">No results yet.</div>
+    </section>
 
-    <div class="stats">
+    <section class="results card" id="results">
+      <h2>Test Complete!</h2>
+      <div class="result-stats">
         <div class="stat">
-            <div class="stat-value" id="wpm">0</div>
-            <div class="stat-label">wpm</div>
+          <div class="stat-value" id="finalWpm">0</div>
+          <div class="stat-label">WPM</div>
         </div>
         <div class="stat">
-            <div class="stat-value" id="accuracy">100</div>
-            <div class="stat-label">acc</div>
+          <div class="stat-value" id="finalAccuracy">100</div>
+          <div class="stat-label">Accuracy</div>
         </div>
         <div class="stat">
-            <div class="stat-value" id="raw">0</div>
-            <div class="stat-label">raw</div>
+          <div class="stat-value" id="finalRaw">0</div>
+          <div class="stat-label">Raw WPM</div>
         </div>
-    </div>
-
-    <div class="results" id="results">
-        <h2>Test Complete!</h2>
-        <div class="result-stats">
-            <div class="stat">
-                <div class="stat-value" id="finalWpm">0</div>
-                <div class="stat-label">wpm</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="finalAccuracy">100</div>
-                <div class="stat-label">accuracy</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="finalRaw">0</div>
-                <div class="stat-label">raw wpm</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="finalTime">30</div>
-                <div class="stat-label">time</div>
-            </div>
+        <div class="stat">
+          <div class="stat-value" id="finalTime">30</div>
+          <div class="stat-label">Time (s)</div>
         </div>
-        <button class="restart-btn" onclick="restartTest()">Try Again</button>
-    </div>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="share-row">
+        <button id="shareBtn" class="btn primary">Share</button>
+        <button id="savePngBtn" class="btn">Download PNG</button>
+        <button id="savePdfBtn" class="btn">Download PDF</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Simple Auth Modal (wired to local only for now; Firebase later) -->
+  <dialog id="authDialog" class="auth-dialog">
+    <form method="dialog" class="auth-card">
+      <h3>Login / Signup (local for now)</h3>
+      <input id="authName" class="input" placeholder="Your name (e.g., Atul)" required>
+      <div class="row">
+        <button id="loginLocal" class="btn primary" value="login">Continue</button>
+        <button class="btn ghost" value="cancel">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
 </body>
 </html>
